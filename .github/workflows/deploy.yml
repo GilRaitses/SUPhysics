@@ -3,30 +3,26 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Or your default branch
+      - cuip  # Trigger the workflow on pushes to the cuip branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout cuip branch
       uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        ref: cuip
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build project
-      run: npm run build  # Customize this if necessary
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./content  # Specify the directory to be published
-
+        publish_branch: gh-pages
+        publish_dir: .  # This is the directory you want to publish, adjust if needed
